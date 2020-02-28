@@ -1,8 +1,19 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+admin.initializeApp();
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 
-export const product = functions.https.onRequest((request, response) => {
- response.send("Got a product");
-});
+export const product = functions.https.onRequest(
+    async (request, response) => {
+        try {
+            const snapshot = await admin.firestore().doc('product/1118').get();
+            // const data = snapshot.data();
+            console.warn('here');
+            console.log(snapshot);
+            response.send(snapshot.data());
+        } catch (error) {
+            response.status(500).send(error);
+        }
+    });
